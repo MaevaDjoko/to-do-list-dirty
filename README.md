@@ -7,4 +7,4 @@ Versioning:
 - Le fichier settings.py contient la variable VERSION qui correspond au numéro de version de notre app. Ils suivent le format MAJEUR.MINEUR.PATCH
 - si fix, changer PATCH, si feature, changer MINEUR, si breaking change, changer MAJEUR
 Commit:
-- Chaque nouvelle version est commit avec pour nom Release 'numéro de version'
+- Chaque nouvelle version est commit et push avec pour nom Release 'numéro de version'
