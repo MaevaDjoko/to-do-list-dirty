@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# S'arrête immédiatement si une commande échoue
+set -e
+
 # Récupère la version passée en paramètre : ./build.sh version=1.0.1
 for arg in "$@"; do
   case $arg in
@@ -14,6 +17,9 @@ done
 if [ -z "$VERSION" ]; then
   exit 1
 fi
+
+# Utilise le linter ruff
+# ruff check .
 
 # Met à jour la variable VERSION dans settings.py
 sed -i "s/^VERSION = .*/VERSION = \"$VERSION\"/" todo/settings.py

@@ -1,0 +1,5 @@
+[tool.ruff]
+# Checker seulement, pas de formatage automatique
+line-length = 88
+select = ["E", "F", "W", "C", "B"]  # erreurs, warnings, best practices
+ignore = []

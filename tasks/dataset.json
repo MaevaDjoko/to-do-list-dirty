@@ -1,0 +1,14 @@
+[
+    {
+        "title": "Faire la vaisselle",
+        "complete": false
+    },
+    {
+        "title": "Ranger ma chambre",
+        "complete": true
+    },
+    {
+        "title": "Amener les petits à l'école",
+        "complete": true
+    }
+]
