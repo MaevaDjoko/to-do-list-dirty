@@ -1,0 +1,75 @@
+
+  - id: T01
+    name: "Test __str__ du modèle Task"
+    type: auto-unittest
+    description: "Vérifie que __str__ retourne bien le titre de la tâche"
+
+  - id: T02
+    name: "Accès à la liste des tâches"
+    type: auto-unittest
+    description: "Vérifie que l'URL /list retourne un code HTTP 200"
+
+  - id: T03
+    name: "Accès à la page de mise à jour"
+    type: auto-unittest
+    description: "Vérifie que la page update_task/<id> retourne un code 200"
+
+  - id: T04
+    name: "Accès à la page de suppression"
+    type: auto-unittest
+    description: "Vérifie que la page delete/<id> retourne un code 200"
+
+  - id: T05
+    name: "Création de tâche via POST"
+    type: auto-unittest
+    description: "Vérifie qu’un POST sur /list crée une tâche"
+
+  - id: T06
+    name: "Mise à jour de tâche via POST"
+    type: auto-unittest
+    description: "Vérifie qu'un POST sur update_task modifie bien la tâche et affiche bien le nouveau titre sur la liste"
+
+  - id: T07
+    name: "Suppression de tâche via POST"
+    type: auto-unittest
+    description: "Vérifie qu’un POST sur delete supprime la tâche et vérifie qu'elle n'existe plus dans la liste"
+
+  - id: T08
+    name: "Import JSON dataset"
+    type: auto-unittest
+    description: "Vérifie que la commande import importe correctement dataset.json"
+
+  - id: T09
+    name: "Affichage correct de la liste"
+    type: manuel
+    description: "Contrôler visuellement que la liste des tâches s’affiche avec un style correct"
+
+  - id: T10
+    name: "Création d’une tâche via l’interface"
+    type: manuel
+    description: "Tester manuellement que la création fonctionne depuis le formulaire"
+
+  - id: T11
+    name: "Mise à jour via l’interface"
+    type: manuel
+    description: "Tester que modifier le titre d'une tâche fonctionne via le navigateur."
+
+  - id: T12
+    name: "Suppression via l’interface"
+    type: manuel
+    description: "Vérifier manuellement que supprimer une tâche fonctionne et rafraîchit l'affichage"
+
+  - id: T13
+    name: "Test responsive"
+    type: manuel
+    description: "Tester visuellement l'affichage sur mobile / tablette"
+
+  - id: T14
+    name: "Performance : chargement de la liste"
+    type: manuel
+    description: "Vérifier que la page list charge instantanément même avec 200+ tâches"
+
+  - id: T15
+    name: "Test que les URLs inexistantes renvoient une 404"
+    type: auto-unittest
+    description: "Vérifie qu’une URL inconnue renvoie bien une page 404"
