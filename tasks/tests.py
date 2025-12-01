@@ -55,7 +55,7 @@ class TaskTest(TestCase):
         Task.objects.all().delete()
         self.assertEqual(Task.objects.count(), 0)
 
-        # Appelle une commande custom Django créée : import_tasks
+        # Appelle la commande custom Django créée : import_tasks
         call_command("import_tasks")
 
         # Vérifie que toutes les tâches du JSON ont été importées
