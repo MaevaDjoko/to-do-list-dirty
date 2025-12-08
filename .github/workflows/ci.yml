@@ -52,13 +52,14 @@ jobs:
       # 6️⃣ Tests Django (unitaires)
       - name: Run Django unit tests
         run: |
-          python manage.py tasks/tests --verbosity=2
-          python manage.py tasks/tests --testrunner=django.test.runner.DiscoverRunner --json > result_test_auto.json || true
+          python manage.py ./tasks/tests --verbosity=2
+          python manage.py ./tasks/tests --testrunner=django.test.runner.DiscoverRunner --json > result_test_auto.json || true
 
       # 7️⃣ Tests Selenium
       - name: Run Selenium E2E tests
         run: |
-          python tasks/templates/tasks/test_e2e_selenium.py
+          pip install selenium
+          python ./tasks/templates/tasks/test_e2e_selenium.py
           # JSON généré : result_test_selenium.json
 
       # 8️⃣ Tests d'accessibilité
