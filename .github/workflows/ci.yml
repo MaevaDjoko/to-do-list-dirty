@@ -55,11 +55,17 @@ jobs:
           python manage.py test --verbosity=2
           python manage.py test --testrunner=django.test.runner.DiscoverRunner --json > result_test_auto.json || true
 
+      - name: Install Chrome
+        run: sudo apt-get update && sudo apt-get install -y google-chrome-stable
+
+      - name: Install Chromedriver
+        run: sudo apt-get install -y chromium-chromedriver
+        
       # 7️⃣ Tests Selenium
       - name: Run Selenium E2E tests
         run: |
           pip install selenium
-          python ./tasks/templates/tasks/test_e2e_selenium.py
+          python manage.py test tasks.tests.test_e2e_selenium --verbosity=2
           # JSON généré : result_test_selenium.json
 
       # 8️⃣ Tests d'accessibilité
