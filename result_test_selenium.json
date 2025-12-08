@@ -27,7 +27,7 @@
     {
         "test_case_id": "T22",
         "name": "test_priority_task_order",
-        "status": "passed"
+        "status": "failed"
     },
     {
         "test_case_id": "T23",
