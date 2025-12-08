@@ -62,7 +62,7 @@ jobs:
       - name: Run Selenium E2E tests
         run: |
           pip install selenium
-          python manage.py test tasks.test_e2e_selenium --verbosity=2 --testrunner=jsonrunner.JSONTestRunner --outfile=result_test_selenium.json
+          python manage.py test tasks.test_e2e_selenium --verbosity=2 --testrunner=json_test_runner.JSONTestRunner --outfile=result_test_selenium.json
         # JSON généré : result_test_selenium.json
 
       # 8️⃣ Tests d'accessibilité
