@@ -44,6 +44,7 @@ jobs:
       # 5️⃣ Apply migrations and start Django server
       - name: Start Django server
         run: |
+          pip install django
           python manage.py migrate
           python manage.py runserver 127.0.0.1:8000 &
           sleep 5
