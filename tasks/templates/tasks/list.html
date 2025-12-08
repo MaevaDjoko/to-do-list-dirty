@@ -54,6 +54,7 @@
 	<form method="POST" action="/">
 		{% csrf_token %}
 		{{form.title}}
+		{{form.priority}}
 		<input class="btn btn-info" type="submit" name="Create Task">
 	</form>
 
@@ -62,12 +63,16 @@
 		<div class="item-row" data-task-id="{{ task.id }}">
 			<a class="btn btn-sm btn-info" href = "{% url 'update_task' task.id %}">Update</a>
 			<a class="btn btn-sm btn-danger" href = "{% url 'delete' task.id %}">Delete</a>
+			{% if task.priority == True %}
+				<span style="color: #fb5607; font-weight: bold;">★ Prioritaire</span>
+			{% endif %}
 			{% if task.complete == True %}
 			<strike>{{task}}</strike>
 			{% else %}
 			<span>{{task}}</span>
 			{% endif %}
 
+			
 		</div>
 	{% endfor %}
 	</div>

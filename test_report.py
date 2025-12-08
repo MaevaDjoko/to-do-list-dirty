@@ -13,15 +13,16 @@ with open("result_test_auto.json", "r", encoding="utf-8") as f:
 with open("result_test_selenium.json", "r", encoding="utf-8") as f:
     test_results_selenium = json.load(f)
 
-result_dict = {
-    tr["test_case_id"]: tr.get("status", "not_found")
-    for tr in test_results_auto
-}
+# Construire un dictionnaire avec tous les résultats
+result_dict = {}
 
-selenium_status = test_results_selenium.get("status", "failed").lower()
+# 1️⃣ Résultats auto-json
+for tr in test_results_auto:
+    result_dict[tr["test_case_id"]] = tr.get("status", "not_found").lower()
 
-# On l'ajoute avec la clé "auto-selenium"
-result_dict["auto-selenium"] = "passed" if selenium_status == "success" else "failed"
+# 2️⃣ Résultats Selenium
+for tr in test_results_selenium:
+    result_dict[tr["test_case_id"]] = tr.get("status", "not_found").lower()
 
 # ---- Rapport ----
 
@@ -37,7 +38,7 @@ for test in test_list:
     status = result_dict.get(test_id, None)
 
     if test_type.startswith("auto"):
-        if status == "passed":
+        if status == "passed" or status == "success":
             symbol = "✅ Passed"
             passed += 1
         elif status == "failed":

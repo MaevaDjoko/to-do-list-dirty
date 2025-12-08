@@ -93,3 +93,28 @@
     name: "Suppression des 2 tâches"
     type: auto-selenium
     description: "Supprimer les tâches crées"
+
+  - id: T20
+    name: "Vérification impacts croisés"
+    type: auto-selenium
+    description: "Ajouter une tâche, ensuite une autre, supprimer la dernière ajouter et vérifier que la première est toujours là"
+
+  - id: T21
+    name: "Marquage tâches prioritaires"
+    type: auto-selenium
+    description: "Marquer une tâche comme prioritaire"
+
+  - id: T22
+    name: "Vérifier l’ordre des tâches après ajout prioritaire"
+    type: auto-selenium
+    description: "La tâche prioritaire doit apparaître en haut de la liste"
+
+  - id: T23
+    name: "Modifier une tâche pour la rendre prioritaire"
+    type: auto-selenium
+    description: "Mettre à jour une tâche existante pour qu'elle devienne prioritaire"
+
+  - id: T24
+    name: "Vérifier ordre après modification"
+    type: auto-selenium
+    description: "La tâche modifiée prioritaire doit remonter en haut de la liste"

@@ -4,7 +4,7 @@ from .models import Task
 from .forms import TaskForm
 # Create your views here.
 def index(request):
-	tasks = Task.objects.all()
+	tasks = Task.objects.all().order_by('-priority')  # priorité d’abord
 
 	form = TaskForm()
 

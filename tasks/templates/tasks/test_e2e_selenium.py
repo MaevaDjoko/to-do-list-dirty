@@ -7,46 +7,55 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
+from functools import wraps
 
 # URL de votre instance de dev
 BASE_URL = "http://127.0.0.1:8000"
 
-# Structure qui contiendra les résultats
-results = {
-    "test_case_id": "auto-selenium",
-    "tests": [],
-    "status": "SUCCESS"
-}
+# Liste pour stocker les résultats
+results = []
+
+# Décorateur pour associer un test à un test_case_id
+def tc(test_case_id):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+                results.append({
+                    "test_case_id": test_case_id,
+                    "name": func.__name__,
+                    "status": "passed"
+                })
+                print(f"{test_case_id} | {func.__name__} | passed")
+            except Exception as e:
+                results.append({
+                    "test_case_id": test_case_id,
+                    "name": func.__name__,
+                    "status": "failed"
+                })
+                print(f"{test_case_id} | {func.__name__} | failed")
+        return wrapper
+    return decorator
 
 # Initialisation du navigateur
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
+# Fonction utilitaire pour récupérer l'ID de la dernière tâche
 def get_last_task_id():
-    # Récupère l’ID de la dernière tâche
     task_rows = driver.find_elements(By.CSS_SELECTOR, ".item-row")
-    last = task_rows[-1]
-    return last.get_attribute("data-task-id")
-
-def save(status, message):
-    results["tests"].append({"status": status, "message": message})
-    print(status, message)
+    return task_rows[-1].get_attribute("data-task-id") if task_rows else None
 
 try:
-    # ---- Test 1 : Accéder à la page principale ----
-    driver.get(BASE_URL)
-    time.sleep(1)
 
-    tasks = driver.find_elements(By.CSS_SELECTOR, ".item-row")
-    initial_count = len(tasks)
+    @tc("T17")
+    def test_load_homepage():
+        driver.get(BASE_URL)
+        time.sleep(1)
+        assert len(driver.find_elements(By.CSS_SELECTOR, ".item-row")) >= 0
 
-    results["tests"].append({
-        "name": "Chargement de la page principale",
-        "result": "SUCCESS",
-        "initial_tasks": initial_count
-    })
-
-    # ---- Test 2 : Création de 2 tâches ----
-    try:
+    @tc("T18")
+    def test_create_two_tasks():
         for i in range(2):
             input_box = driver.find_element(By.NAME, "title")
             input_box.clear()
@@ -54,101 +63,77 @@ try:
             input_box.send_keys(Keys.RETURN)
             time.sleep(0.2)
 
-        tasks = driver.find_elements(By.CSS_SELECTOR, ".item-row")
-
-        results["tests"].append({
-            "name": "Création des tâches",
-            "result": "SUCCESS",
-            "count_after_creation": len(tasks)
-        })
-    except Exception as e:
-        results["tests"].append({
-            "name": "Création des tâches",
-            "result": "FAIL",
-            "error": str(e)
-        })
-        results["status"] = "FAIL"
-
-    # ---- Test 3 : Suppression des tâches ----
-    try:
+    @tc("T19")
+    def test_delete_two_tasks():
         for i in range(2):
-            delete_button = driver.find_elements(By.CSS_SELECTOR, ".btn.btn-sm.btn-danger")[-1]
-            delete_button.click()
-            time.sleep(0.4)
-
-            submit_btn = WebDriverWait(driver, 6).until(
+            delete_btn = driver.find_elements(By.CSS_SELECTOR, ".btn.btn-sm.btn-danger")[-1]
+            delete_btn.click()
+            submit_btn = WebDriverWait(driver, 5).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit']"))
             )
             submit_btn.click()
-            time.sleep(0.4)
+            time.sleep(0.3)
 
-        tasks = driver.find_elements(By.CSS_SELECTOR, ".item-row")
+    @tc("T20")
+    def test_cross_impact():
+        # Ajouter tâche A
+        input_box = driver.find_element(By.NAME, "title")
+        input_box.send_keys("Tâche A - Selenium")
+        input_box.send_keys(Keys.RETURN)
+        time.sleep(0.5)
+        taskA_id = get_last_task_id()
 
-        results["tests"].append({
-            "name": "Suppression des tâches",
-            "result": "SUCCESS",
-            "count_after_delete": len(tasks)
-        })
-    except Exception as e:
-        results["tests"].append({
-            "name": "Suppression des tâches",
-            "result": "FAIL",
-            "error": str(e)
-        })
-        results["status"] = "FAIL"
+        # Ajouter tâche B
+        input_box = driver.find_element(By.NAME, "title")
+        input_box.send_keys("Tâche B - Selenium")
+        input_box.send_keys(Keys.RETURN)
+        time.sleep(0.5)
+        taskB_id = get_last_task_id()
 
-    # ---- Test 4 : Vérification impacts croisés ----
-    # Ajout tâche A
-    input_box = driver.find_element(By.NAME, "title")
-    input_box.send_keys("Tâche A - Selenium")
-    input_box.send_keys(Keys.RETURN)
-    time.sleep(0.5)
+        # Supprimer tâche B
+        delete_btn = driver.find_element(
+            By.CSS_SELECTOR, f"[data-task-id='{taskB_id}'] a.btn.btn-sm.btn-danger"
+        )
+        delete_btn.click()
+        submit_btn = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit']"))
+        )
+        submit_btn.click()
+        time.sleep(0.5)
 
-    taskA_id = get_last_task_id()
-    save("OK", f"Tâche A ajoutée avec ID={taskA_id}")
+        # Vérifier que tâche A existe toujours
+        remaining = driver.find_elements(By.CSS_SELECTOR, f"[data-task-id='{taskA_id}']")
+        assert len(remaining) > 0, "Tâche B a été supprimée !"
 
-    # Ajout tâche B
-    input_box = driver.find_element(By.NAME, "title")
-    input_box.send_keys("Tâche B - Selenium")
-    input_box.send_keys(Keys.RETURN)
-    time.sleep(0.5)
+    @tc("T21")
+    def test_create_priority_task():
+        input_box = driver.find_element(By.NAME, "title")
+        input_box.clear()
+        input_box.send_keys("Tâche prioritaire test")
 
-    taskB_id = get_last_task_id()
-    save("OK", f"Tâche B ajoutée avec ID={taskB_id}")
+        # cocher la case prioritaire
+        checkbox = driver.find_element(By.NAME, "priority")
+        checkbox.click()
 
-    # Suppression tâche B
-    delete_btn = driver.find_element(
-        By.CSS_SELECTOR, f"[data-task-id='{taskB_id}'] a.btn.btn-sm.btn-danger"
-    )
-    delete_btn.click()
+        input_box.send_keys(Keys.RETURN)
+        time.sleep(0.5)
 
-    submit_btn = WebDriverWait(driver, 4).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit']"))
-    )
-    submit_btn.click()
-    time.sleep(0.5)
+    @tc("T22")
+    def test_priority_task_order():
+        task_rows = driver.find_elements(By.CSS_SELECTOR, ".item-row")
+        first_task_title = task_rows[0].text
+        assert "Tâche prioritaire test" in first_task_title, "La tâche prioritaire n'est pas en haut"
 
-    save("OK", f"Tâche B (ID={taskB_id}) supprimée")
-
-    # Vérification : tâche A doit encore exister
-    remaining = driver.find_elements(
-        By.CSS_SELECTOR, f"[data-task-id='{taskA_id}']"
-    )
-
-    if len(remaining) == 0:
-        raise Exception("La tâche A n’existe plus !")
-
-    save("OK", f"Tâche A (ID={taskA_id}) toujours présente")
-
-    results["status"] = "SUCCESS"
-
-except Exception as e:
-    save("ERROR", str(e))
-    results["status"] = "FAILED"
+    # Exécution des tests
+    test_load_homepage()
+    test_create_two_tasks()
+    test_delete_two_tasks()
+    test_cross_impact()
+    test_create_priority_task()
+    test_priority_task_order()
 
 finally:
-    # Sauvegarde JSON des résultats
+    # Sauvegarde des résultats dans le format attendu
     with open("../../../result_test_selenium.json", "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
-
     driver.quit()

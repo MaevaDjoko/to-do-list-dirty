@@ -1,37 +1,32 @@
-{
-    "test_case_id": "auto-selenium",
-    "tests": [
-        {
-            "name": "Chargement de la page principale",
-            "result": "SUCCESS",
-            "initial_tasks": 7
-        },
-        {
-            "name": "Création des tâches",
-            "result": "SUCCESS",
-            "count_after_creation": 9
-        },
-        {
-            "name": "Suppression des tâches",
-            "result": "SUCCESS",
-            "count_after_delete": 7
-        },
-        {
-            "status": "OK",
-            "message": "Tâche A ajoutée avec ID=69"
-        },
-        {
-            "status": "OK",
-            "message": "Tâche B ajoutée avec ID=70"
-        },
-        {
-            "status": "OK",
-            "message": "Tâche B (ID=70) supprimée"
-        },
-        {
-            "status": "OK",
-            "message": "Tâche A (ID=69) toujours présente"
-        }
-    ],
-    "status": "SUCCESS"
-}
+[
+    {
+        "test_case_id": "T17",
+        "name": "test_load_homepage",
+        "status": "passed"
+    },
+    {
+        "test_case_id": "T18",
+        "name": "test_create_two_tasks",
+        "status": "passed"
+    },
+    {
+        "test_case_id": "T19",
+        "name": "test_delete_two_tasks",
+        "status": "passed"
+    },
+    {
+        "test_case_id": "T20",
+        "name": "test_cross_impact",
+        "status": "passed"
+    },
+    {
+        "test_case_id": "T21",
+        "name": "test_create_priority_task",
+        "status": "passed"
+    },
+    {
+        "test_case_id": "T22",
+        "name": "test_priority_task_order",
+        "status": "passed"
+    }
+]
