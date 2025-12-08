@@ -7,6 +7,7 @@ name = "pypi"
 coverage = "*"
 ruff = "*"
 pyyaml = "*"
+selenium = "*"
 
 [dev-packages]
 coverage = "*"

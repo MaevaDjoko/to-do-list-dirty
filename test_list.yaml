@@ -73,3 +73,23 @@
     name: "Test que les URLs inexistantes renvoient une 404"
     type: auto-unittest
     description: "Vérifie qu’une URL inconnue renvoie bien une page 404"
+
+  - id: T16
+    name: "Création et suppression de 10 tâches via interface"
+    type: manuel
+    description: "Se connecter manuellement à l'application, compter le nombre de tâche, créer 10 tâches, supprimer 10 tâches et compter à nouveau le nombre de tâche"
+
+  - id: T17
+    name: Chargement de la page principale
+    type: auto-selenium
+    description: "Charger la page principale"
+
+  - id: T18
+    name: "Création de 2 tâches"
+    type: auto-selenium
+    description: "Créer les tâches demandées"
+
+  - id: T19
+    name: "Suppression des 2 tâches"
+    type: auto-selenium
+    description: "Supprimer les tâches crées"
