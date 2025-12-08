@@ -62,7 +62,6 @@ jobs:
       - name: Run Selenium E2E tests
         run: |
           pip install selenium
-          pip install django-jsonrunner
           python manage.py test tasks.test_e2e_selenium --verbosity=2 --testrunner=jsonrunner.JSONTestRunner --outfile=result_test_selenium.json
         # JSON généré : result_test_selenium.json
 
