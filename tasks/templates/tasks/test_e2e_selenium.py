@@ -124,6 +124,35 @@ try:
         first_task_title = task_rows[0].text
         assert "Tâche prioritaire test" in first_task_title, "La tâche prioritaire n'est pas en haut"
 
+    
+    @tc("T23")
+    def test_update_task_to_priority():
+        # Récupérer la dernière tâche
+        last_task_id = get_last_task_id()
+        # Cliquer sur Update
+        update_btn = driver.find_element(By.CSS_SELECTOR, f"[data-task-id='{last_task_id}'] a.btn.btn-sm.btn-info")
+        update_btn.click()
+        time.sleep(0.5)
+
+        # Cocher la case prioritaire
+        priority_checkbox = driver.find_element(By.NAME, "priority")
+        if not priority_checkbox.is_selected():
+            priority_checkbox.click()
+        
+        # Soumettre le formulaire
+        submit_btn = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit']"))
+        )
+        submit_btn.click()
+        time.sleep(0.5)
+
+
+    @tc("T24")
+    def test_priority_task_order_after_update():
+        task_rows = driver.find_elements(By.CSS_SELECTOR, ".item-row")
+        first_task_title = task_rows[0].text
+        assert "Tâche prioritaire" in first_task_title, "La tâche modifiée prioritaire n'est pas en haut"
+
     # Exécution des tests
     test_load_homepage()
     test_create_two_tasks()
@@ -131,6 +160,8 @@ try:
     test_cross_impact()
     test_create_priority_task()
     test_priority_task_order()
+    test_update_task_to_priority()
+    test_priority_task_order_after_update()
 
 finally:
     # Sauvegarde des résultats dans le format attendu

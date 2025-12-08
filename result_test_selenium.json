@@ -28,5 +28,15 @@
         "test_case_id": "T22",
         "name": "test_priority_task_order",
         "status": "passed"
+    },
+    {
+        "test_case_id": "T23",
+        "name": "test_update_task_to_priority",
+        "status": "passed"
+    },
+    {
+        "test_case_id": "T24",
+        "name": "test_priority_task_order_after_update",
+        "status": "passed"
     }
 ]
