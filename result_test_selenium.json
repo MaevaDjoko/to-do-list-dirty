@@ -37,6 +37,6 @@
     {
         "test_case_id": "T24",
         "name": "test_priority_task_order_after_update",
-        "status": "passed"
+        "status": "failed"
     }
 ]

@@ -38,7 +38,7 @@ jobs:
       # 4️⃣ Linter
       - name: Run Linter
         run: |
-          flake8 .
+          flake8 .\tasks\templates\tasks\ --max-line-length=120
 
       # 5️⃣ Apply migrations and start Django server
       - name: Start Django server

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Task
 from .forms import TaskForm
+
+
 # Create your views here.
 def index(request):
 	tasks = Task.objects.all().order_by('-priority')  # priorité d’abord
@@ -11,33 +13,34 @@ def index(request):
 	if request.method == 'POST':
 		form = TaskForm(request.POST)
 		if form.is_valid():
-			#adds to the database if valid
+			# adds to the database if valid
 			form.save()
 		return redirect('/')
 
-	context= {'tasks':tasks,'form':form, 'version':settings.VERSION}
-	return render(request, 'tasks/list.html',context)
+	context= {'tasks' : tasks,'form' : form, 'version' : settings.VERSION}
+	return render(request, 'tasks/list.html', context)
 
-def updateTask(request,pk):
+
+def updateTask(request, pk):
 	task = Task.objects.get(id=pk)
 	form = TaskForm(instance=task)
 
 	if request.method == "POST":
-		form = TaskForm(request.POST,instance=task)
+		form = TaskForm(request.POST, instance=task)
 		if form.is_valid():
 			form.save()
 			return redirect('/')
 
+	context = {'form': form}
+	return render(request, 'tasks/update_task.html', context)
 
-	context = {'form':form}
-	return render(request, 'tasks/update_task.html',context)
 
-def deleteTask(request,pk):
+def deleteTask(request, pk):
 	item = Task.objects.get(id=pk)
 
 	if request.method == "POST":
 		item.delete()
 		return redirect('/')
 
-	context = {'item':item}
+	context = {'item': item}
 	return render(request, 'tasks/delete.html', context)

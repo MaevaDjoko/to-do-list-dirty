@@ -2,6 +2,7 @@ import json
 from django.core.management.base import BaseCommand
 from tasks.models import Task
 
+
 class Command(BaseCommand):
     help = "Import tasks from dataset.json"
 

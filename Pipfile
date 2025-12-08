@@ -8,6 +8,7 @@ coverage = "*"
 ruff = "*"
 pyyaml = "*"
 selenium = "*"
+flake8 = "*"
 
 [dev-packages]
 coverage = "*"

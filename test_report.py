@@ -53,9 +53,11 @@ for test in test_list:
 
     print(f"{test_id} | {test_type} | {symbol}")
 
+
 # --- Summary ---
 def pct(n):
     return round(n / total * 100, 1)
+
 
 print("\n--- Summary ---")
 print(f"Number of tests: {total}")

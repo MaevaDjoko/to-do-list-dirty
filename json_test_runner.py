@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import django
+from tasks.tests import TaskTest
 from django.conf import settings
 from django.test.utils import get_runner
 
@@ -10,9 +11,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "todo.settings")
 
 # Configurer Django
 django.setup()
-
-# Importer les tests après que Django soit configuré
-from tasks.tests import TaskTest
 
 # Récupérer le test runner
 TestRunner = get_runner(settings)

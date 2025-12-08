@@ -15,6 +15,7 @@ BASE_URL = "http://127.0.0.1:8000"
 # Liste pour stocker les résultats
 results = []
 
+
 # Décorateur pour associer un test à un test_case_id
 def tc(test_case_id):
     def decorator(func):
@@ -28,7 +29,7 @@ def tc(test_case_id):
                     "status": "passed"
                 })
                 print(f"{test_case_id} | {func.__name__} | passed")
-            except Exception as e:
+            except Exception:
                 results.append({
                     "test_case_id": test_case_id,
                     "name": func.__name__,
@@ -38,13 +39,16 @@ def tc(test_case_id):
         return wrapper
     return decorator
 
+
 # Initialisation du navigateur
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
 
 # Fonction utilitaire pour récupérer l'ID de la dernière tâche
 def get_last_task_id():
     task_rows = driver.find_elements(By.CSS_SELECTOR, ".item-row")
     return task_rows[-1].get_attribute("data-task-id") if task_rows else None
+
 
 try:
 
@@ -124,13 +128,14 @@ try:
         first_task_title = task_rows[0].text
         assert "Tâche prioritaire test" in first_task_title, "La tâche prioritaire n'est pas en haut"
 
-    
     @tc("T23")
     def test_update_task_to_priority():
         # Récupérer la dernière tâche
         last_task_id = get_last_task_id()
         # Cliquer sur Update
-        update_btn = driver.find_element(By.CSS_SELECTOR, f"[data-task-id='{last_task_id}'] a.btn.btn-sm.btn-info")
+        update_btn = driver.find_element(
+            By.CSS_SELECTOR, f"[data-task-id='{last_task_id}'] a.btn.btn-sm.btn-info"
+        )
         update_btn.click()
         time.sleep(0.5)
 
@@ -138,14 +143,13 @@ try:
         priority_checkbox = driver.find_element(By.NAME, "priority")
         if not priority_checkbox.is_selected():
             priority_checkbox.click()
-        
+
         # Soumettre le formulaire
         submit_btn = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit']"))
         )
         submit_btn.click()
         time.sleep(0.5)
-
 
     @tc("T24")
     def test_priority_task_order_after_update():
