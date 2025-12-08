@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev-quality-system
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      selenium:
+        image: selenium/standalone-chrome:latest
+        ports:
+          - 4444:4444
+
+    steps:
+      # 1️⃣ Checkout
+      - uses: actions/checkout@v3
+
+      # 2️⃣ Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium webdriver-manager flake8 requests PyYAML
+
+      # 4️⃣ Linter
+      - name: Run Linter
+        run: |
+          flake8 .
+
+      # 5️⃣ Apply migrations and start Django server
+      - name: Start Django server
+        run: |
+          python manage.py migrate
+          python manage.py runserver 127.0.0.1:8000 &
+          sleep 5
+
+      # 6️⃣ Tests Django (unitaires)
+      - name: Run Django unit tests
+        run: |
+          python manage.py tasks/tests --verbosity=2
+          python manage.py tasks/tests --testrunner=django.test.runner.DiscoverRunner --json > result_test_auto.json || true
+
+      # 7️⃣ Tests Selenium
+      - name: Run Selenium E2E tests
+        run: |
+          python tasks/templates/tasks/test_e2e_selenium.py
+          # JSON généré : result_test_selenium.json
+
+      # 8️⃣ Tests d'accessibilité
+
+      # 9️⃣ Générer le rapport global
+      - name: Generate test report
+        id: test_report
+        run: |
+          python test_report.py > full_report.txt
+          cat full_report.txt
+
+      # 🔟 Comment PR avec le rapport
+      - name: Comment PR with test results
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ### Résultat de la CI
+            ```
+            $(cat full_report.txt)
+            ```
