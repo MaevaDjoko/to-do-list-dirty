@@ -176,6 +176,6 @@ try:
 
 finally:
     # Sauvegarde des résultats dans le format attendu
-    with open("result_test_selenium.json", "w", encoding="utf-8") as f:
+    with open("../result_test_selenium.json", "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
     driver.quit()
